@@ -32,6 +32,7 @@ class Droid:
     def select_channel(self,channel):
         for i, pin in enumerate(self.mux_select):
             pin.value = (channel >> i) & 1
+        #print(channel,[self.mux_select[i].value for i in range(4)])
     def readPositions(self):
         arr=[]
         for i in range(14):
@@ -43,5 +44,5 @@ class Droid:
 
 d=Droid()
 for i in range(10000):
-    print(d.readPositions()[1])
+    print(d.readPositions()[0])
 
