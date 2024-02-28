@@ -10,3 +10,5 @@ d.setMotors(mov) #set them all to highest positions
 time.sleep(1)
 mov[7]=50 #change just one of them
 d.setMotors(mov)
+time.sleep(1)
+d.neutral()
