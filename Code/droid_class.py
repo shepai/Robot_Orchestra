@@ -25,7 +25,7 @@ class Droid:
         for pin in self.mux_select:
             pin.direction = digitalio.Direction.OUTPUT
         self.validate={8:[0,180],}
-        self.start=[150,150,100,110,50,40,100,180,180,40,180,40,50,100]
+        self.start=[150,150,100,110,50,40,100,100,180,40,180,40,50,100]
         #dc motors
         motor1_pwm=board.GP19
         motor2_pwm=board.GP18
@@ -139,8 +139,8 @@ class Droid:
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, 0)
         
 d=Droid()
-d.set_specific(8,0)
-for i in range(1000):
+d.set_specific(8,100)
+for i in range(10000):
     print(d.readPositions()[1])
 
 
