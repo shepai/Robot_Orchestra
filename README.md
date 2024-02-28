@@ -1,5 +1,5 @@
 # Robot_Orchestra
-Code for controlling the robot orchestra chassis. This makes use of two DC motors and 14 servos, two arms and one neck.
+Code for controlling the robot orchestra chassis. This makes use of two DC motors and 14 servos, two arms and one neck. We hacked a turtle robot chassis, but anything with two DC motors will do. On top we mount a 14 degrees of freedom body. The controlling of the library is seen in the class documentation listed below. We have included plenty of <a href="https://github.com/shepai/Robot_Orchestra/tree/main/Code/examples">examples</a>
 
 # Droid Class Documentation
 
