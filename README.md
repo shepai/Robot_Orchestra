@@ -39,6 +39,12 @@ Sets the positions of servo motors gradually.
 - `positions`: List of target positions for each servo.
 - `step_size`: Step size for each movement (default is 2).
 
+The motor positions of each of the motors corrosponds as following:
+
+```
+[right hand, right wrist rotate, right wrist, right elbow, right shoulder, right shoulder rotate, neck, neck rotate, left shoulder rotate, left shoulder, left elbow, left wrist, left wrist rotate, left hand]
+```
+
 ### `set_specific(channel, position)`
 
 Sets a specific servo to a specified position.
