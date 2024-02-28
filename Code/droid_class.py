@@ -33,13 +33,13 @@ class Droid:
             iterator=list(range(current_angle,positions[i],step_size))
             if current_angle>positions[i]: iterator=list(reversed(range(positions[i],current_angle,step_size)))
             if len(iterator)>0:
-                iterators.append([idx,i,iterator])
+                iterators.append([idx,iterator])
         c=0
         while len(iterators)>0: #keep following instructions till all done
             to_pop=[]
             for i in range(len(iterators)):
-                if c<len(iterators[i][2]):
-                    next_value=iterators[i][2][c]
+                if c<len(iterators[i][1]):
+                    next_value=iterators[i][1][c]
                     validate=True
                     index=iterators[i][0]
                     if len(self.validate.get(index,[]))>0: #check within bounds
