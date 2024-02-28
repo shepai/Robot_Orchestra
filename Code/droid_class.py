@@ -137,24 +137,24 @@ class Droid:
         self._set_motor_speed(self.motor1_pwm, speed)
         self._set_motor_speed(self.motor2_pwm, speed)
         self._set_motor_direction(self.motor1_out1, self.motor1_out2, 1)
-        self._set_motor_direction(self.motor2_out1, self.motor2_out2, -1)
+        self._set_motor_direction(self.motor2_out1, self.motor2_out2, 1)
 
     def forward(self, speed=1.0):
         self._set_motor_speed(self.motor1_pwm, speed)
         self._set_motor_speed(self.motor2_pwm, speed)
         self._set_motor_direction(self.motor1_out1, self.motor1_out2, -1)
-        self._set_motor_direction(self.motor2_out1, self.motor2_out2, 1)
+        self._set_motor_direction(self.motor2_out1, self.motor2_out2, -1)
 
     def left(self, speed=1.0):
         self._set_motor_speed(self.motor1_pwm, speed)
         self._set_motor_speed(self.motor2_pwm, speed)
-        self._set_motor_direction(self.motor1_out1, self.motor1_out2, -1)
+        self._set_motor_direction(self.motor1_out1, self.motor1_out2, 1)
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, -1)
 
     def right(self, speed=1.0):
         self._set_motor_speed(self.motor1_pwm, speed)
         self._set_motor_speed(self.motor2_pwm, speed)
-        self._set_motor_direction(self.motor1_out1, self.motor1_out2, 1)
+        self._set_motor_direction(self.motor1_out1, self.motor1_out2, -1)
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, 1)
 
     def stop(self):
@@ -162,7 +162,4 @@ class Droid:
         self._set_motor_speed(self.motor2_pwm, 0)
         self._set_motor_direction(self.motor1_out1, self.motor1_out2, 0)
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, 0)
-        
-
-
 
