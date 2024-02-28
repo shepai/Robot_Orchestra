@@ -20,7 +20,7 @@ class Droid:
         self.positions=[0,1,2,3,4,5,7,8,10,11,12,13,14,15]
         #setup multiplexer
         mux_select_pins = [board.GP0, board.GP1, board.GP2, board.GP3]
-        self.signal_pin = analogio.AnalogIn(board.GP26)
+        self.signal_pin = analogio.AnalogIn(board.GP27)
         self.mux_select = [digitalio.DigitalInOut(pin) for pin in mux_select_pins]
         for pin in self.mux_select:
             pin.direction = digitalio.Direction.OUTPUT
@@ -88,7 +88,7 @@ class Droid:
         self.kit.servo[channel].angle=position
     def select_channel(self,channel):
         for i, pin in enumerate(self.mux_select):
-            pin.value = (channel >> i) & 1
+            pin.value = int((channel >> i) & 1)
         #print(channel,[self.mux_select[i].value for i in range(4)])
     def readPositions(self):
         arr=[]
