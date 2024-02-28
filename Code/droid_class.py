@@ -163,9 +163,6 @@ class Droid:
         self._set_motor_direction(self.motor1_out1, self.motor1_out2, 0)
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, 0)
         
-d=Droid()
 
-for i in range(1):
-    print(d.readPositions()[1])
 
 
