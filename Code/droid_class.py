@@ -4,6 +4,7 @@ import board
 import busio
 import digitalio
 import analogio
+import pwmio
 
 class Droid:
     def __init__(self):  
@@ -25,6 +26,26 @@ class Droid:
             pin.direction = digitalio.Direction.OUTPUT
         self.validate={8:[120,180],}
         self.start=[150,150,100,110,50,40,100,180,180,40,180,40,50,100]
+        #dc motors
+        motor1_pwm=board.GP19
+        motor2_pwm=board.GP18
+        motor1_out1=board.GP21
+        motor1_out2=board.GP20
+        motor2_out1=board.GP14
+        motor2_out2=board.GP15
+        
+        self.motor1_pwm = pwmio.PWMOut(motor1_pwm, frequency=1000, duty_cycle=0)
+        self.motor1_out1 = digitalio.DigitalInOut(motor1_out1)
+        self.motor1_out1.direction = digitalio.Direction.OUTPUT
+        self.motor1_out2 = digitalio.DigitalInOut(motor1_out2)
+        self.motor1_out2.direction = digitalio.Direction.OUTPUT
+
+        # Motor 2 setup
+        self.motor2_pwm = pwmio.PWMOut(motor2_pwm, frequency=1000, duty_cycle=0)
+        self.motor2_out1 = digitalio.DigitalInOut(motor2_out1)
+        self.motor2_out1.direction = digitalio.Direction.OUTPUT
+        self.motor2_out2 = digitalio.DigitalInOut(motor2_out2)
+        self.motor2_out2.direction = digitalio.Direction.OUTPUT
     def setMotors(self,positions,step_size=2):
         assert len(positions)==len(self.kit.servo)-2, "Incorrect sizes"
         iterators=[] 
@@ -73,9 +94,47 @@ class Droid:
         return arr
     def neutral(self):
         self.setMotors(self.start)
+    def _set_motor_speed(self, motor_pwm, speed):
+        # Map speed from the range [-1, 1] to [0, 65535]
+        mapped_speed = int((speed + 1) / 2 * 65535)
+        motor_pwm.duty_cycle = mapped_speed
 
+    def _set_motor_direction(self, motor_out1, motor_out2, direction):
+        motor_out1.value = direction == 1
+        motor_out2.value = direction == -1
+
+    def backward(self, speed=1.0):
+        self._set_motor_speed(self.motor1_pwm, speed)
+        self._set_motor_speed(self.motor2_pwm, speed)
+        self._set_motor_direction(self.motor1_out1, self.motor1_out2, 1)
+        self._set_motor_direction(self.motor2_out1, self.motor2_out2, -1)
+
+    def forward(self, speed=1.0):
+        self._set_motor_speed(self.motor1_pwm, speed)
+        self._set_motor_speed(self.motor2_pwm, speed)
+        self._set_motor_direction(self.motor1_out1, self.motor1_out2, -1)
+        self._set_motor_direction(self.motor2_out1, self.motor2_out2, 1)
+
+    def left(self, speed=1.0):
+        self._set_motor_speed(self.motor1_pwm, speed)
+        self._set_motor_speed(self.motor2_pwm, speed)
+        self._set_motor_direction(self.motor1_out1, self.motor1_out2, -1)
+        self._set_motor_direction(self.motor2_out1, self.motor2_out2, -1)
+
+    def right(self, speed=1.0):
+        self._set_motor_speed(self.motor1_pwm, speed)
+        self._set_motor_speed(self.motor2_pwm, speed)
+        self._set_motor_direction(self.motor1_out1, self.motor1_out2, 1)
+        self._set_motor_direction(self.motor2_out1, self.motor2_out2, 1)
+
+    def stop(self):
+        self._set_motor_speed(self.motor1_pwm, 0)
+        self._set_motor_speed(self.motor2_pwm, 0)
+        self._set_motor_direction(self.motor1_out1, self.motor1_out2, 0)
+        self._set_motor_direction(self.motor2_out1, self.motor2_out2, 0)
+        
 d=Droid()
 for i in range(10000):
-    print(d.readPositions()[0])
+    print(d.readPositions()[1])
 
 
