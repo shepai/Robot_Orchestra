@@ -5,6 +5,16 @@ import busio
 import digitalio
 import analogio
 import pwmio
+import board
+from adafruit_ht16k33.matrix import Matrix8x8
+eyeshape=[[0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0],
+          [0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0],
+          [1,0,1,1,0,0,0,1,1,0,0,0,1,1,0,1],
+          [1,0,1,1,0,0,0,1,1,0,0,0,1,1,0,1],
+          [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
+          [1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1],
+          [0,1,0,0,0,0,1,0,0,1,0,0,0,0,1,0],
+          [0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0]]
 
 class Droid:
     def __init__(self):  
@@ -14,7 +24,14 @@ class Droid:
         print("I2C addresses found:",[hex(device_address) for device_address in i2c.scan()])
         time.sleep(2)
         i2c.unlock()
-
+        #make eyes
+        self.eye1 = Matrix8x8(i2c, address=(0x70))
+        self.eye1.brightness = 0.4
+        self.eye1.fill(1)
+        self.eye2 = Matrix8x8(i2c, address=(0x72))
+        self.eye2.brightness = 0.4
+        self.eye2.fill(1)
+        self.parse_eyes(eyeshape)
         # Initialize the ServoKit object with the i2c address of the PCA9685
         self.kit = ServoKit(channels=16,i2c=i2c)
         self.positions=[0,1,2,3,4,5,7,8,10,11,12,13,14,15]
@@ -46,6 +63,11 @@ class Droid:
         self.motor2_out1.direction = digitalio.Direction.OUTPUT
         self.motor2_out2 = digitalio.DigitalInOut(motor2_out2)
         self.motor2_out2.direction = digitalio.Direction.OUTPUT
+    def parse_eyes(self,matrix):
+        for i in range(len(matrix)):
+            for j in range(len(matrix)):
+                self.eye1[i, j] = matrix[i][j]
+                self.eye2[i, j] = matrix[i][j+8]
     def setMotors(self,positions,step_size=2):
         assert len(positions)==len(self.kit.servo)-2, "Incorrect sizes"
         iterators=[] 
@@ -140,7 +162,7 @@ class Droid:
         
 d=Droid()
 d.set_specific(8,100)
-for i in range(10000):
+for i in range(1):
     print(d.readPositions()[1])
 
 
