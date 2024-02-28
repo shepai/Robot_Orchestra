@@ -24,14 +24,6 @@ class Droid:
         print("I2C addresses found:",[hex(device_address) for device_address in i2c.scan()])
         time.sleep(2)
         i2c.unlock()
-        #make eyes
-        self.eye1 = Matrix8x8(i2c, address=(0x70))
-        self.eye1.brightness = 0.4
-        self.eye1.fill(1)
-        self.eye2 = Matrix8x8(i2c, address=(0x72))
-        self.eye2.brightness = 0.4
-        self.eye2.fill(1)
-        self.parse_eyes(eyeshape)
         # Initialize the ServoKit object with the i2c address of the PCA9685
         self.kit = ServoKit(channels=16,i2c=i2c)
         self.positions=[0,1,2,3,4,5,7,8,10,11,12,13,14,15]
@@ -43,6 +35,14 @@ class Droid:
             pin.direction = digitalio.Direction.OUTPUT
         self.validate={8:[0,180],}
         self.start=[150,150,100,110,50,40,100,100,180,40,180,40,50,100]
+        #make eyes
+        self.eye1 = Matrix8x8(i2c, address=(0x70))
+        self.eye1.brightness = 0.4
+        self.eye1.fill(1)
+        self.eye2 = Matrix8x8(i2c, address=(0x72))
+        self.eye2.brightness = 0.4
+        self.eye2.fill(1)
+        self.parse_eyes(eyeshape)
         #dc motors
         motor1_pwm=board.GP19
         motor2_pwm=board.GP18
@@ -72,7 +72,10 @@ class Droid:
         assert len(positions)==len(self.kit.servo)-2, "Incorrect sizes"
         iterators=[] 
         for i,idx in enumerate(self.positions): #gather movement instructions
-            current_angle=int(self.kit.servo[idx].angle)
+            try:
+                current_angle=int(self.kit.servo[idx].angle)
+            except:
+                current_angle=positions[i]-2
             iterator=list(range(current_angle,positions[i],step_size))
             if current_angle>positions[i]: iterator=list(reversed(range(positions[i],current_angle,step_size)))
             if len(iterator)>0:
@@ -161,7 +164,7 @@ class Droid:
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, 0)
         
 d=Droid()
-d.set_specific(8,100)
+
 for i in range(1):
     print(d.readPositions()[1])
 
