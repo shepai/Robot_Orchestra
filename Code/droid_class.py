@@ -23,12 +23,43 @@ class Droid:
         self.mux_select = [digitalio.DigitalInOut(pin) for pin in mux_select_pins]
         for pin in self.mux_select:
             pin.direction = digitalio.Direction.OUTPUT
-    def setMotors(self,positions):
+        self.validate={8:[120,180],}
+        self.start=[150,150,100,110,50,40,100,180,180,40,180,40,50,100]
+    def setMotors(self,positions,step_size=2):
         assert len(positions)==len(self.kit.servo)-2, "Incorrect sizes"
-        for i in range(len(self.positions)):
-            self.kit.servo[self.positions[i]].angle=positions[i]
-            print("motor",self.positions[i],"to",positions[i])
-            time.sleep(0.1)
+        iterators=[] 
+        for i,idx in enumerate(self.positions): #gather movement instructions
+            current_angle=int(self.kit.servo[idx].angle)
+            iterator=list(range(current_angle,positions[i],step_size))
+            if current_angle>positions[i]: iterator=list(reversed(range(positions[i],current_angle,step_size)))
+            if len(iterator)>0:
+                iterators.append([idx,i,iterator])
+        c=0
+        while len(iterators)>0: #keep following instructions till all done
+            to_pop=[]
+            for i in range(len(iterators)):
+                if c<len(iterators[i][2]):
+                    next_value=iterators[i][2][c]
+                    validate=True
+                    index=iterators[i][0]
+                    if len(self.validate.get(index,[]))>0: #check within bounds
+                        if not(next_value>=self.validate[index][0] and next_value<=self.validate[index][1]):
+                            validate=False
+                    if validate:
+                        if next_value>180: next_value=180
+                        if next_value<0: next_value=0
+                        self.kit.servo[index].angle=next_value
+                else:
+                    to_pop.append(i)
+            c+=1
+            i=0
+            while i<len(to_pop): #kill finished streams
+                iterators.pop(list(reversed(to_pop))[i])
+                i+=1
+        time.sleep(0.1)
+            
+    def set_specific(self,channel,position):
+        self.kit.servo[channel].angle=position
     def select_channel(self,channel):
         for i, pin in enumerate(self.mux_select):
             pin.value = (channel >> i) & 1
@@ -40,9 +71,11 @@ class Droid:
             analog_value = self.signal_pin.value
             arr.append(analog_value)
         return arr
-
+    def neutral(self):
+        self.setMotors(self.start)
 
 d=Droid()
 for i in range(10000):
     print(d.readPositions()[0])
+
 
