@@ -39,10 +39,22 @@ while True:
     if "exit" in command:
         break
     elif "set" in command:
-        command=command.replace("set")
-        
+        command=command.replace("set","").replace("[","").replace("]","")
+        ar=command.split(",")
+        mov=[int(ar[i]) for i in range(len(ar))]
+        d.setMotors(mov)
+    elif "forward" in command:
+        d.forward(0.5)
+    elif "stop" in command:
+        d.stop()
+    elif "left" in command:
+        d.left(0.5)
+    elif "right" in command:
+        d.left(0.5)
     else:
         print(command)
     # Close the socket
+d.stop()
+d.neutral()
 sock.close()
 
