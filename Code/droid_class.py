@@ -133,15 +133,15 @@ class Droid:
         motor_out1.value = direction == 1
         motor_out2.value = direction == -1
 
-    def backward(self, speed=1.0):
-        self._set_motor_speed(self.motor1_pwm, speed)
-        self._set_motor_speed(self.motor2_pwm, speed)
+    def backward(self, speed=1.0,bias=[0,0]):
+        self._set_motor_speed(self.motor1_pwm, speed+bias[0])
+        self._set_motor_speed(self.motor2_pwm, speed+bias[1])
         self._set_motor_direction(self.motor1_out1, self.motor1_out2, 1)
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, 1)
 
-    def forward(self, speed=1.0):
-        self._set_motor_speed(self.motor1_pwm, speed)
-        self._set_motor_speed(self.motor2_pwm, speed)
+    def forward(self, speed=1.0,bias=[0,0]):
+        self._set_motor_speed(self.motor1_pwm, speed+bias[0])
+        self._set_motor_speed(self.motor2_pwm, speed+bias[1])
         self._set_motor_direction(self.motor1_out1, self.motor1_out2, -1)
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, -1)
 
@@ -162,4 +162,15 @@ class Droid:
         self._set_motor_speed(self.motor2_pwm, 0)
         self._set_motor_direction(self.motor1_out1, self.motor1_out2, 0)
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, 0)
+        
+d=Droid()
+d.forward(0.5,bias=[0,0])
+time.sleep(2)
+mov=[180 for i in range(14)]
+d.setMotors(mov) #set them all to highest positions
+d.stop()
+d.neutral()
+for i in range(1):
+    print(d.readPositions()[1])
+
 
