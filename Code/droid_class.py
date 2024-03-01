@@ -33,7 +33,7 @@ class Droid:
         self.mux_select = [digitalio.DigitalInOut(pin) for pin in mux_select_pins]
         for pin in self.mux_select:
             pin.direction = digitalio.Direction.OUTPUT
-        self.validate={8:[0,180],}
+        self.validate={8:[0,180],4:[21,180],9:[34,180]}
         self.start=[150,150,100,110,50,40,100,100,180,40,180,40,50,100]
         #make eyes
         self.eye1 = Matrix8x8(i2c, address=(0x70))
@@ -102,7 +102,7 @@ class Droid:
             while i<len(to_pop): #kill finished streams
                 iterators.pop(list(reversed(to_pop))[i])
                 i+=1
-        time.sleep(0.1)
+        time.sleep(0.3)
             
     def set_specific(self,channel,position):
         if len(self.validate.get(channel,[]))>0: #check within bounds
@@ -163,14 +163,3 @@ class Droid:
         self._set_motor_direction(self.motor1_out1, self.motor1_out2, 0)
         self._set_motor_direction(self.motor2_out1, self.motor2_out2, 0)
         
-d=Droid()
-d.forward(0.5,bias=[0,0])
-time.sleep(2)
-mov=[180 for i in range(14)]
-d.setMotors(mov) #set them all to highest positions
-d.stop()
-d.neutral()
-for i in range(1):
-    print(d.readPositions()[1])
-
-
