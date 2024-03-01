@@ -1,6 +1,10 @@
 import socket
 import time
 import tkinter as tk
+from tkinter import *
+from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import asksaveasfile
+import numpy as np
 
 class RobotConnection:
     def __init__(self):
@@ -37,6 +41,7 @@ class interface:
     def __init__(self,server):
         self.server=server
         self.defaults=[150,150,100,110,50,40,100,100,180,40,180,40,50,100]
+        self.loadedFile=np.array([np.array(self.defaults).copy()])
         self.create()
     def create(self):
         # Create the main Tkinter window
@@ -59,7 +64,7 @@ class interface:
             var.set(self.defaults[i])
             self.slider_vars.append(var)
 
-            slider = tk.Scale(self.root, from_=0, to=100, orient=tk.HORIZONTAL, variable=var)
+            slider = tk.Scale(self.root, from_=0, to=180, orient=tk.HORIZONTAL, variable=var)
             slider.grid(row=i + 1, column=1)
             slider.bind("<B1-Motion>", lambda event, i=i+1: self.on_slider_change(i))
         # Movement Buttons
@@ -81,9 +86,70 @@ class interface:
         # Send Button on the right side
         send_button = tk.Button(self.root, text="Send", command=self.on_send_button_click)
         send_button.grid(row=num_sliders + 5, column=2, sticky=tk.E)
+
+        #play
+        send_button = tk.Button(self.root, text="Record", command=self.record)
+        send_button.grid(row=num_sliders + 5, column=3, sticky=tk.E)
+
+        #record
+        send_button = tk.Button(self.root, text="Play", command=self.play)
+        send_button.grid(row=num_sliders + 5, column=4, sticky=tk.E)
+        #reset
+        send_button = tk.Button(self.root, text="Reset", command=self.reset)
+        send_button.grid(row=num_sliders + 6, column=4, sticky=tk.E)
+        
+        menubar = Menu(self.root)
+        filemenu = Menu(menubar, tearoff=0)
+        filemenu.add_command(label="Open", command=self.openfile)
+        filemenu.add_command(label="Save current order", command=self.savefile)
+        filemenu.add_separator()
+        filemenu.add_command(label="Exit", command=self.on_closing)
+        menubar.add_cascade(label="File", menu=filemenu)
+
+        self.root.config(menu=menubar)
+        self.writings=[]
+    def reset(self):
+        self.loadedFile=np.array([np.array(self.defaults).copy()])
+    def play(self,delay=0.5):
+        print("play")
+        for i in range(len(self.loadedFile)):
+            positions=list(self.loadedFile[i])
+            time.sleep(delay)
+            try:
+                self.server.sendMessage("set"+str(positions)) #send positions to robot
+            except:
+                print("set"+str(positions))
+            for j in range(len(self.slider_vars)): #update gui positions
+                self.slider_vars[j].set(positions[j])
+        print("Done")
+    def record(self):
+        print("record")
+        ar=[]
+        for i in range(len(self.slider_vars)):
+            ar.append(self.slider_vars[i].get())
+        ar=np.array(ar)
+        self.loadedFile=np.vstack([self.loadedFile,ar])
+        print(self.loadedFile)
+    def openfile(self): #open a sequence
+        filename = askopenfilename()
+        self.loadedFile = np.loadtxt(filename,
+                 delimiter=",", dtype=float).astype(int)
+        print("loaded file",self.loadedFile)
+    def savefile(self): #save a sequence
+        f=asksaveasfile(defaultextension=".csv")
+        print(f.name)
+        np.savetxt(f.name, self.loadedFile, delimiter=",") #csv format
+    def on_closing(self):
+        self.root.destroy()
+        try:
+            self.server.sendMessage("exit")
+        except:
+            pass
     def run(self):
         # Run the Tkinter event loop
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root.mainloop()
+        
 
     def on_connect_button_click(self):
         try:
