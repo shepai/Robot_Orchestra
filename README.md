@@ -116,3 +116,10 @@ Sets the direction of a DC motor.
 - `motor_out1`: DigitalInOut object representing one direction pin.
 - `motor_out2`: DigitalInOut object representing the other direction pin.
 - `direction`: Direction of the motor (1 for forward, -1 for backward).
+
+
+# examples
+There are many examples provided in this repository. Some are for running on device, allowing you to modify the existing robot code.
+The PC side code is designed for network communication with the robot wirelessly. The code on the robot will need to be running the <a href="https://github.com/shepai/Robot_Orchestra/blob/main/Code/examples/wifi.py">wifi.py</a> which waits for a connection to the server. Bare in mind that the ip address of the server will need to be changed in wifi.py to match the ip of your device hosting.
+
+To run the server you can use either of the examples. GUI allows you to control the robot via a graphical interface. The server code is more basic but is easier to modify.
