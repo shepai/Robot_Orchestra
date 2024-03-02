@@ -21,6 +21,9 @@ The `Droid` class is a Python class designed for controlling a robot using Circu
 - CircuitPython libraries.
 - Adafruit CircuitPython PCA9685 library.
 - Adafruit CircuitPython ServoKit library.
+- Adafruit ht16k33
+- Adafruit register
+- Adafruit motorkit
 
 ## Class Initialization
 
