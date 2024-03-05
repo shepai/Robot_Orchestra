@@ -40,9 +40,10 @@ class RobotConnection:
 class interface:
     def __init__(self,server):
         self.server=server
-        self.defaults=[150,150,100,110,50,40,100,100,180,40,180,40,50,100]
+        self.defaults=[150,150,100,110,50,40,100,100,180,40,180,40,50,100,0]
         self.loadedFile=np.array([np.array(self.defaults).copy()])
         self.create()
+        self.activated_direction=0
     def create(self):
         # Create the main Tkinter window
         self.root = tk.Tk()
@@ -127,6 +128,7 @@ class interface:
         ar=[]
         for i in range(len(self.slider_vars)):
             ar.append(self.slider_vars[i].get())
+        ar.append(self.activated_direction) #add floor direction
         ar=np.array(ar)
         self.loadedFile=np.vstack([self.loadedFile,ar])
         print(self.loadedFile)
@@ -168,18 +170,19 @@ class interface:
         self.server.sendMessage("set"+str(ar))
     def move_forward(self):
         self.server.sendMessage("forward")
-
+        self.activated_direction=1
     def move_left(self):
         self.server.sendMessage("left")
-
+        self.activated_direction=3
     def move_right(self):
         self.server.sendMessage("right")
-
+        self.activated_direction=4
     def move_backward(self):
         self.server.sendMessage("backward")
-
+        self.activated_direction=2
     def stop_movement(self):
         self.server.sendMessage("stop")
+        self.activated_direction=0
 
 
 server=RobotConnection()

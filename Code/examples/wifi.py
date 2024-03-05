@@ -46,7 +46,20 @@ while True:
             print(ar)
             mov=[int(ar[i]) for i in range(len(ar))]
             print(mov)
-            d.setMotors(mov)
+            if len(mov)<14:
+                d.setMotors(mov)
+            else:
+                d.setMotors(mov[0:14])
+                if mov[-1]==0: #encoded for motors
+                    d.stop()
+                elif mov[-1]==1:
+                    d.forward()
+                elif mov[-1]==2:
+                    d.backwards()
+                elif mov[-1]==3:
+                    d.left()
+                elif mov[-1]==4:
+                    d.right()
         elif "forward" in command:
             d.forward(0.5)
         elif "stop" in command:
@@ -67,4 +80,3 @@ while True:
 d.stop()
 d.neutral()
 sock.close()
-
