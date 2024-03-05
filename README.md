@@ -24,6 +24,13 @@ CircuitPython libraries.
 - Adafruit ht16k33
 - Adafruit register
 - Adafruit motorkit
+- Adafruit_motor
+
+In order to get the wifi working you will need to save a file called settings.toml with the following content:
+```
+CIRCUITPY_WIFI_SSID = "wifi name"
+CIRCUITPY_WIFI_PASSWORD = "wifi password"
+```
 
 For the PC side we make use of TKinter and sockets, that should both be installed by default with Python.
 
