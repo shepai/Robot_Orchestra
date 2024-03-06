@@ -26,7 +26,7 @@ CircuitPython libraries.
 - Adafruit motorkit
 - Adafruit_motor
 
-In order to get the wifi working you will need to save a file called settings.toml with the following content:
+In order to get the wifi working you will need to save a file called <a href="https://learn.adafruit.com/pico-w-wifi-with-circuitpython/create-your-settings-toml-file">settings.toml</a> with the following content:
 ```
 CIRCUITPY_WIFI_SSID = "wifi name"
 CIRCUITPY_WIFI_PASSWORD = "wifi password"
@@ -135,3 +135,37 @@ There are many examples provided in this repository. Some are for running on dev
 The PC side code is designed for network communication with the robot wirelessly. The code on the robot will need to be running the <a href="https://github.com/shepai/Robot_Orchestra/blob/main/Code/examples/wifi.py">wifi.py</a> which waits for a connection to the server. Bare in mind that the ip address of the server will need to be changed in wifi.py to match the ip of your device hosting.
 
 To run the server you can use either of the examples. GUI allows you to control the robot via a graphical interface. The server code is more basic but is easier to modify.
+
+The WiFi code works by sending bytearrays to the device. These bytearrays have a command, that is sometimes followed by values. The way these instructions work is as follows
+
+## Commands
+
+To go forward send the string:
+```
+forward
+```
+To go backward send the string:
+```
+backward
+```
+To go left send the string:
+```
+left
+```
+To go right send the string:
+```
+right
+```
+Move motors at the same time. The following will send all servo commands to 0 degrees. The final position is for the wheels. 0 to not move, 1 to go forward, 2 for backwards, 3 for left and 4 for right.
+```
+set[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
+```
+Go backwards:
+```
+set[0,0,0,0,0,0,0,0,0,0,0,0,0,0,2]
+```
+Set neutral pose:
+```
+set[150,150,100,110,50,40,100,100,180,40,180,40,50,100,0]
+```
+
