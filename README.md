@@ -156,6 +156,10 @@ To go right send the string:
 ```
 right
 ```
+To stop send the string:
+```
+stop
+```
 Move motors at the same time. The following will send all servo commands to 0 degrees. The final position is for the wheels. 0 to not move, 1 to go forward, 2 for backwards, 3 for left and 4 for right.
 ```
 set[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
